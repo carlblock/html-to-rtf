@@ -1,9 +1,9 @@
 module.exports = [
    {
       opening: 'b',
-      openingRtf: '{\\b',
+      openingRtf: '\\b',
       closing: '/b',
-      closingRtf: '}'
+      closingRtf: '\\b0'
    },
    {
       opening: 'br',
@@ -73,9 +73,9 @@ module.exports = [
    },
    {
       opening: 'i',
-      openingRtf: '{\\i',
+      openingRtf: '\\i',
       closing: '/i',
-      closingRtf: '}'
+      closingRtf: '\\i0'
    },
    {
       opening: 'li',
@@ -91,9 +91,9 @@ module.exports = [
    },
    {
       opening: 'p',
-      openingRtf: '{\\pard',
+      openingRtf: '\\viewkind4\\uc1\\pard\\ltrpar\\sb70\\lang2057\\f0\\fs24',
       closing: '/p',
-      closingRtf: '\\sb70\\par}'
+      closingRtf: '\\par'
    },
    {
       opening: 'ol',
@@ -127,9 +127,9 @@ module.exports = [
    },
    {
       opening: 'strong',
-      openingRtf: '{\\b',
+      openingRtf: '\\b',
       closing: '/strong',
-      closingRtf: '}'
+      closingRtf: '\\b0'
    },
    {
       opening: 'table',
@@ -169,9 +169,9 @@ module.exports = [
    },
    {
       opening: 'u',
-      openingRtf: '{\\ul',
+      openingRtf: '\\ul',
       closing: '/u',
-      closingRtf: '}'
+      closingRtf: '\\ul0'
    },
    {
       opening: 'ul',
