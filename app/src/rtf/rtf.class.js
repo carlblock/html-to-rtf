@@ -114,7 +114,7 @@ class Rtf {
   }
 
   addSpaceAroundString(contentOfTag) {
-    return ` ${ contentOfTag } `;
+    return `${ contentOfTag }`;
   }
 
   setHighlightInRtf() {
