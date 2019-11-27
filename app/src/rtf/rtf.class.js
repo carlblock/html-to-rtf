@@ -3,13 +3,12 @@ const Style           = require('../style/style.class');
 const AllowedHtmlTags = require('../allowed-html-tags/allowed-html-tags.class');
 const Table           = require('../table/table.class');
 const MyString        = require('../string/my-string.class');
-const juice 		      = require('juice');
-const charset = require('./charset.module')
-const fs 				      = require('fs');
+const juice           = require('juice');
+const fs              = require('fs');
 
 class Rtf {
   constructor() { 
-    this.rtfHeaderOpening = "{\\rtf1\\fbidis\\ansi\\ansicpg1252\\deff0{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}";
+    this.rtfHeaderOpening = "{\\rtf1\\ansi\\deff0{\\fonttbl {\\f0\\fnil\\fcharset0 Calibri;}{\\f1\\fnil\\fcharset2 Symbol;}}";
     this.rtfHeaderContent = '';
     this.rtfClosing = "}";
     this.rtfContentReferences = [];
@@ -17,29 +16,11 @@ class Rtf {
   }
 
   convertHtmlToRtf(html) {
-    charset.forEach(c =>
-            html = html.replace(new RegExp(c.htmlEntity, 'g'), c.rtfEscapeChar)
-        );
+    let $ = cheerio.load(juice(html));
+    let treeOfTags = $('html').children();
 
-      html = html.replace(/[^\u0000-\u007F]/g, function (element) {
-          // handle based on https://www.zopatista.com/python/2012/06/06/rtf-and-unicode/
-          let char = element.charCodeAt(0)
-          return `\\u${char}?`
-      });
-
-      let $ = cheerio.load(juice(html));
-      let treeOfTags = $('html').children();
-
-      Array.from(treeOfTags).forEach(tag => this.readAllChildsInTag(tag));
-
-      return this.buildRtf();
-  }
-
-  swapHtmlStrangerTags(html, dafaultTag) {
-    return html.replace(/<(\/?[a-z-]+)( *[^>]*)?>/gi, (match, tagName, options) => {
-      let newTag = !tagName.includes('/') ? `<${ dafaultTag }${ options ? options : '' }>` : `</${ dafaultTag }>`;
-      return AllowedHtmlTags.isKnowedTag(tagName) ? match : `${ newTag }`;
-    });
+    Array.from(treeOfTags).forEach(tag => this.readAllChildsInTag(tag));
+    return this.buildRtf();
   }
 
   buildRtf() {
@@ -116,7 +97,7 @@ class Rtf {
   }
 
   addContentOfTagInRtfCode(contentOfTag) {
-    contentOfTag = MyString.removeCharacterOfEscapeInAllString(contentOfTag, '\n\t');
+    contentOfTag = MyString.escapeCharacters(contentOfTag);
    
     if(contentOfTag != undefined && !MyString.hasOnlyWhiteSpace(contentOfTag))
       this.rtfContentReferences.push({ content: this.addSpaceAroundString(contentOfTag.trim()), tag: false });
