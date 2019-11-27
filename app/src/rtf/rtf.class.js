@@ -16,14 +16,22 @@ class Rtf {
   }
 
   convertHtmlToRtf(html) {
-    let htmlWithoutStrangerTags, $, treeOfTags;
+    charset.forEach(c =>
+            html = html.replace(new RegExp(c.htmlEntity, 'g'), c.rtfEscapeChar)
+        );
 
-    htmlWithoutStrangerTags = this.swapHtmlStrangerTags(html, 'p');
-    $ = cheerio.load(juice(htmlWithoutStrangerTags));
-    treeOfTags = $('html').children();
+      html = html.replace(/[^\u0000-\u007F]/g, function (element) {
+          // handle based on https://www.zopatista.com/python/2012/06/06/rtf-and-unicode/
+          let char = element.charCodeAt(0)
+          return `\\u${char}?`
+      });
 
-    Array.from(treeOfTags).forEach(tag => this.readAllChildsInTag(tag));
-    return this.buildRtf();
+      let $ = cheerio.load(juice(html));
+      let treeOfTags = $('html').children();
+
+      Array.from(treeOfTags).forEach(tag => this.readAllChildsInTag(tag));
+
+      return this.buildRtf();
   }
 
   swapHtmlStrangerTags(html, dafaultTag) {
