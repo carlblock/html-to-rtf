@@ -10,7 +10,7 @@ class MyString {
                 return '\\' + c;
             } else if (isNonAscii7) {
                 var cc = c.charCodeAt();
-                return '\\u' + String(cc <= 32767 ? cc : cc -65535) + '?';
+                return '\\u' + String(cc <= 32767 ? cc : cc -65535) + '';
             }
             return undefined;
         }
